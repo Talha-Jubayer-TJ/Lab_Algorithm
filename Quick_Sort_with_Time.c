@@ -1,103 +1,82 @@
 #include<stdio.h>
 #include<time.h>
-#define Size 100000
+void quicksort(int number[1000],int first,int last){
+   int i, j, pivot, temp;
 
-///took 0.083s to sort 100000 elements !best O(nlogn), worst O(n^2)
-int Pivot_Correct_Position(int A[],int l,int r)
-{
-    int i,j,temp,pvt,pvt_rt_position;
-    i=l-1;
-    pvt=r;
-    j=l;
-    while(j<r)
-    {
-        if(A[j]<A[pvt])
-        {
+   if(first<last){
+      pivot=first;
+      i=first;
+      j=last;
+
+      while(i<j){
+
+            while(number[i]<=number[pivot]&&i<last)
             i++;
-            temp=A[i];
-            A[i]=A[j];
-            A[j]=temp;
+            while(number[j]>number[pivot])
+            j--;
+            if(i<j){
+                    temp=number[i];
+                    number[i]=number[j];
+                    number[j]=temp;
+            }
         }
-        j++;
-    }
-    pvt_rt_position=i+1;
-    temp=A[pvt_rt_position];
-    A[pvt_rt_position]=A[pvt];
-    A[pvt]=temp;
-    return pvt_rt_position;
+
+      temp=number[pivot];
+      number[pivot]=number[j];
+      number[j]=temp;
+      quicksort(number,first,j-1);
+      quicksort(number,j+1,last);
+
+   }
 }
 
-void Quick_Sort(int A[],int left,int right)
-{
-    if(left>=right)
-    {
-        return;
-    }
-    int pivot=Pivot_Correct_Position(A,left,right);
-    Quick_Sort(A,left,pivot-1);
-    Quick_Sort(A,pivot+1,right);
-}
+int main(){
+   int i, n, number[1000];
+   FILE *fp, *fw;
+    printf("\nPrinting UnSorted Numbers\n");
+
+    fp=fopen("input.txt", "w");
+
+     printf("Enter number of elements limit: \n");
+               scanf("%d", &n);
 
 
-int main()
-{
-    FILE *file;
-    int x,i,A[Size],j,temp;
-    int time1;
-    float T1;
-
-    file = fopen("input.txt","w");
-    if(file==NULL)
-    {
-        printf("Couldn't open Input File.\n");
-        return;
-    }
-
-    srand(time(0));//to seed rand fn
-    for(i=0;i<Size;i++)
-    {
-        x=rand();
-        fprintf(file, "%d\n",x);
-    }
-    fclose(file);
-
-    ///Scan from input file
-    file = fopen("input.txt", "r");
-    if(file==NULL)
-    {
-        printf("Couldn't open Input File.\n");
-        return;
-    }
-
-    for(i=0;i<Size;i++)
-    {
-        fscanf(file, "%d", &A[i]);
-    }
-    fclose(file);
+               printf("\nbefore sorting: \n");
+                srand(time(0));
 
 
-    time1 =clock();
 
-    Quick_Sort(A,0,Size-1);
+             for (i = 0; i < n; i++){
+                number[i]=rand();
+             }
 
-    time1 =clock();
-    T1 = (float)time1/CLOCKS_PER_SEC;
+                for (i = 0; i < n; i++){
+                    fprintf(fp,"%d\n", number[i]);
+                    printf("%d\n",number[i]);
+                }
 
-    ///output in Output file
-    file = fopen("output.txt","w");
-    if(file==NULL)
-    {
-        printf("Couldn't open output File.\n");
-        return;
-    }
+    fclose(fp);
 
-    for(i=0;i<Size;i++)
-    {
-        fprintf(file, "%d\n", A[i]);
-    }
-    fclose(file);
+     clock_t t;
+    t = clock ();
 
-    printf("Quick Sort Took %f sec to Sort %d item\n",T1,Size);
+    quicksort(number,0,n-1);
 
-    return 0;
+     t = clock()  ;
+    double  time_taken = ((double)t)/CLOCKS_PER_SEC;
+
+
+   printf("\nOrder of Sorted elements: ");
+
+       fw=fopen("output.txt", "w");
+
+       for (i=0;i<n;i++){
+                    fprintf(fw,"%d\n", number[i]);
+                    printf("\n%d",number[i]);
+                }
+
+    fclose(fw);
+    printf("\n\n***** QUIC sort took %f seconds to execute ******\n\n", time_taken);
+
+   return 0;
 }
