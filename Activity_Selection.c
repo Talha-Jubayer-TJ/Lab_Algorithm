@@ -1,78 +1,94 @@
 #include<stdio.h>
-#define Size 11
 
-struct Problem_Set
+void activities(int s[1000], int f[1000], int n)
+
 {
-    int id;
-    int start_time;
-    int end_time;
-};
+    FILE *fp,*fw;
+
+
+    fw=fopen("output.txt", "w");
+
+	int i, j;
+
+	printf ("\n\nAfter Selection Activities are:\n");
+	fprintf (fw,"After Selection Activities are:\n");
+
+	i = 1;
+
+	printf("A[%d]=[%d,%d]\n",i,s[i],f[i]);
+	fprintf (fw,"A[%d]= [%d,%d]\n",i,s[i],f[i]);
+
+	for (j = 1; j<=n; j++)
+
+	{
+
+		if (s[j] >= f[i])
+
+		{
+
+
+			printf ("A[%d]=[%d,%d]\n",j,s[j],f[j]);
+			fprintf (fw,"A[%d]=[%d,%d]\n", j,s[j],f[j]);
+
+			i = j;
+
+		}
+
+	}
+	printf("\n");
+	fclose(fw);
+
+
+}
+
+
 
 int main()
+
 {
-    FILE *file;
-    file = fopen("input.txt","w");
-    struct Problem_Set A[Size],temp;
-    int i,j,index,small,S[Size],checking_time,n;///S[] for the of the resulted activity, n = used for resulted activity loop
-    for(i=0;i<Size;i++)
-    {
-        A[i].id=i;
-        printf("Enter Start Time\n");
-        scanf("%d",&A[i].start_time);
-        printf("Enter Finish Time\n");
-        scanf("%d",&A[i].end_time);
-        fprintf(file,"ID:%d Start_Time:%d  End_Time:%d\n",A[i].id+1,A[i].start_time,A[i].end_time);
-        printf("\n");
-    }
-    fclose(file);
+    int i,n,s[1000],f[1000];
+    FILE *fp,*fw;
 
-    for(i=0;i<Size;i++)
+    fp=fopen("input.txt","w");
+
+    printf("Enter 1st & 2nd array limit:\n");
+    scanf("%d",&n);
+
+    printf("1st array Element are:\n");
+    for(i=1;i<=n;i++)
     {
-        small=A[i].end_time;
-        index=i;
-        for(j=i+1;j<Size;j++)
-        {
-            if(A[j].end_time<small)
+        scanf("%d",&s[i]);
+    }
+
+
+    fprintf(fp,"1st ARRAY Element are: ");
+    for(i=1;i<=n;i++)
+    {
+        fprintf(fp,"%d\t",s[i]);
+    }
+
+    printf("2nd array Element are:\n");
+    for(i=1;i<=n;i++)
+    {
+        scanf("%d",&f[i]);
+    }
+
+    fprintf(fp,"\n2st ARRAY Element are: ");
+    for(i=1;i<=n;i++)
+    {
+        fprintf(fp,"%d\t",f[i]);
+    }
+
+
+    printf("\nBefore Selection Activities are:");
+    fprintf(fp,"\n\nBefore Selection Activities are:");
+    {
+        for(i=1;i<=n;i++)
             {
-                small=A[j].end_time;
-                index=j;
+                fprintf (fp,"\nA[%d]= [%d,%d]",i,s[i],f[i]);
+                printf("\nA[%d]= [%d,%d]",i,s[i],f[i]);
             }
-        }
-        if(i!=index)
-        {
-            temp=A[index];
-            A[index]=A[i];
-            A[i]=temp;
-        }
     }
+    fclose(fp);
 
-    n=0;
-    S[n]=0;///0 for taking 0th element
-    checking_time=A[0].end_time;
-
-    for(i=1;i<Size;i++)
-    {
-        if(A[i].start_time>=checking_time)
-        {
-            n++;
-            S[n]=i;
-            checking_time=A[i].end_time;
-        }
-    }
-    printf("Sorted with End Time\n");
-    for(i=0;i<Size;i++)
-    {
-        printf("ID:%d   Start_Time:%d   End_Time:%d\n",A[i].id,A[i].start_time,A[i].end_time);
-    }
-    file = fopen("output.txt","w");
-    fprintf(file,"Total Activity is %d and they are\n",n+1);
-    printf("\nTotal Activity is %d and they are\n",n+1);
-    for(i=0;i<=n;i++)
-    {
-        j=S[i];
-        printf("ID:%d   Start_Time:%d   End_Time:%d\n",A[j].id,A[j].start_time,A[j].end_time);
-        fprintf(file,"ID:%d   Start_Time:%d   End_Time:%d\n",A[j].id,A[j].start_time,A[j].end_time);
-    }
-    fclose(file);
-    return 0;
-}
+	activities(s, f, n);
